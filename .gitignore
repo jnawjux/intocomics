@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Leaving off large data files
+reviews_Books.json
+reviews_Movies_and_TV.json
+metadata.json
