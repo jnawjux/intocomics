@@ -35,20 +35,19 @@ def get_related_ids(df):
 
     return all_unique_ids
 
-def new_id_column(df, column, suffix_val, new_name):
-    """Take in column with unique indexes, return new index values. This is done to remove the 
-    default ASIN and user ID from Amazon reviews and create better unique ids.
+def new_id_dictionary(df, column, suffix_val):
+    """Take in column with unique indexes, return dictionary with new index values. This is done to
+     remove the default ASIN and user ID from Amazon reviews and create better unique ids.
     Args:
         df: source dataframe
         column: name of column with ids to replace
         suffix_val: new suffix value for unique codes. Example: all new user_ids could end
         with '00000'
-        new_name: name for new column to be added to dataframe
     Returns:
-        new_sp_df: New Spark dataframe with column of new unique ids
+        new_id_dict: New Spark dataframe with column of new unique ids
     
     """
-    unique_vals = list(set(df.select(column).collect()))
-    new_ids = [int(str(i) + suffix_val) for i in range(1,len(unique_vals)+1)]
+    unique_vals = list(set([old_id[0] for old_id in df.select(column).collect()]))
+    new_ids = [(str(i) + suffix_val) for i in range(1,len(unique_vals)+1)]
     new_id_dict = {k:v for k,v in zip(unique_vals, new_ids)}
-    df[new_name] = df[column].apply(lambda x: new_id_dict[x])
+    return new_id_dict
