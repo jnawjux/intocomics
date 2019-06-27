@@ -1,4 +1,9 @@
 from selenium.webdriver import Chrome
+import time
+import pyspark
+import pyspark.sql.functions as F
+from pyspark.ml.recommendation import ALS
+from pyspark.sql.types import StringType, IntegerType
 
 def get_amazon_list_ids(link):
     """Scraping function using Selenium for getting Amazon product IDs (ASIN) from 'Best Seller' pages.
@@ -51,3 +56,142 @@ def new_id_dictionary(df, column, suffix_val):
     new_ids = [(str(i) + suffix_val) for i in range(1,len(unique_vals)+1)]
     new_id_dict = {k:v for k,v in zip(unique_vals, new_ids)}
     return new_id_dict
+
+
+def get_title_by_asin(asin):
+    """Scraping function using Selenium for getting product names by Amazon ASIN.
+    Args:
+      asin: Amazon ASIN unique product ID 
+    Returns:
+      title: title of product on Amazon with that ASIN 
+    """
+    # Create search result page from ASIN
+    link  = "https://www.amazon.com/s?k=" + asin + "&ref=nb_sb_noss"
+
+    # Instatiate browser
+    browser = Chrome()
+
+    browser.get(link)
+
+    # Find title by unique XPath to first result (most common format)
+    try:
+        title = browser.find_element_by_xpath('//*[@id="search"]/div[1]/div[2]/div/span[3]/div[1]\
+                                            /div/div/div/div/div[2]/div[2]/div/div[1]/div/div/div\
+                                            [1]/h2/a/span').text
+    
+    except:
+        title = 'None found'
+    browser.close()
+    return title
+
+
+def get_missing_titles(asin_list):
+    """Take in a list of ASINs and return a list of dictionaries with their correct title
+        Args:
+      asin_list: list of ASINs to search for on Amazon
+    Returns:
+      asin_title_list: a new list of dictionaries with the asin and title for each"""
+    asin_title_list = []
+
+    # Run each ASIN through the get_title_by_asin function and return dictionary
+    for asin in asin_list:
+        title = get_title_by_asin(asin)
+        new_temp_dict = {'asin': asin, 'title': title}
+        time.sleep(5)
+
+
+def get_user_reviews():
+    """Take user input and create dataframe added for recommending
+    Args:
+        None
+    Returns:
+        pd.DataFrame(reviews): Pandas dataframe of users reviews from inputs
+    """
+    # Instantiate Spark & load reviews
+    spark = (pyspark.sql.SparkSession.builder
+    .master("local")
+    .getOrCreate())
+    
+    all_reviews = spark.read.json('data/all_reviews.json')
+
+    # Make a dataframe of just movies
+    query = """
+        SELECT 
+            DISTINCT CAST(item_id as string) as item_id
+        ,   title
+        ,   count
+        FROM 
+            table
+        WHERE 
+            item_id LIKE '%44'"""
+
+    all_reviews.createOrReplaceTempView('table')
+
+    get_movies = spark.sql(query).toPandas()
+
+    # Sort dataframe by review count, take a random sample from the top 500 reviewed
+    get_movies.sort_values('count', ascending=False, inplace=True)
+    movie_rand_sample = get_movies[:500].sample(n=10)
+
+    reviews = []
+
+    # Give a user input and movie title and take in score
+    for index, movie in movie_rand_sample.iterrows():
+        print(movie['title'])
+        rating = input("How would you rate this movie? (0-5, OR type 'skip'): ")
+        # If user has not seen, can enter skip instead
+        if rating == 'skip':
+            clear_output()
+            continue
+        # Creating dictionary of review and adding to reviews
+        else:
+            movie_rating = {'user_id': 101, 'overall': int(rating),
+                            'item_id': int(movie['item_id']), 'count':movie['count'],
+                            'title': movie['title']}
+            reviews.append(movie_rating)
+            clear_output()
+    return pd.DataFrame(reviews)
+
+
+def get_recommendations(new_user_df, new_user=101):
+    """Get recommendations for new user!
+    Args:
+        new_user: id given for new user, defaults to standard 101
+        new_user_df: Pandas dataframe with user reviews, as generated from get_user_reviews function
+    Returns:
+        Prints top three recommended comics for new user
+    """
+    # Instantiate Spark session & load reviews
+    spark = (pyspark.sql.SparkSession.builder
+    .master("local")
+    .getOrCreate())
+    
+    new_user_spark = spark.createDataFrame(new_user_df)
+
+    all_reviews = spark.read.json('data/all_reviews.json')
+    
+    # Combine user reviews with others and prep for modeling
+    ratings_all = all_reviews.select(['count', 'item_id','overall','title','user_id'])\
+                             .union(new_user_spark)
+
+    als_ready = ratings_all.select([col("user_id").cast(IntegerType()),
+                                  col("item_id").cast(IntegerType()),
+                                  col("overall")])
+    
+    # Create ALS model 
+    als = ALS(rank=3, regParam=0.1, 
+      userCol='user_id', itemCol='item_id', 
+      ratingCol='overall', nonnegative=True)
+    
+    als_model = als.fit(als_ready)
+    
+    # Get recommendations for user and only return those that are comics & top three
+    user_recommend = als_model.recommendForAllUsers(30)
+    recs_for_user = user_recommend.where(user_recommend.user_id == new_user).take(1)
+    all_comics = [reco[0] for reco in recs_for_user[0]['recommendations']\
+                  if str(reco[0]).endswith('22') ]
+    comic_titles = list(set(all_reviews.filter(col('item_id')\
+                                       .isin(all_comics))\
+                                       .select('title').collect()))
+    for comic in comic_titles[:3]:
+        print(comic[0])
