@@ -1,9 +1,14 @@
 from selenium.webdriver import Chrome
 import time
+import pandas as pd
 import pyspark
 import pyspark.sql.functions as F
 from pyspark.ml.recommendation import ALS
 from pyspark.sql.types import StringType, IntegerType
+import urllib
+from io import StringIO
+
+from IPython.display import clear_output
 
 def get_amazon_list_ids(link):
     """Scraping function using Selenium for getting Amazon product IDs (ASIN) from 'Best Seller' pages.
@@ -97,7 +102,9 @@ def get_missing_titles(asin_list):
     for asin in asin_list:
         title = get_title_by_asin(asin)
         new_temp_dict = {'asin': asin, 'title': title}
+        asin_title_list.append(new_temp_dict)
         time.sleep(5)
+    return asin_title_list
 
 
 def get_user_reviews():
@@ -112,7 +119,7 @@ def get_user_reviews():
     .master("local")
     .getOrCreate())
     
-    all_reviews = spark.read.json('data/all_reviews.json')
+    all_reviews = spark.read.json('data/all_reviews_fixed_titles.json')
 
     # Make a dataframe of just movies
     query = """
@@ -131,7 +138,7 @@ def get_user_reviews():
 
     # Sort dataframe by review count, take a random sample from the top 500 reviewed
     get_movies.sort_values('count', ascending=False, inplace=True)
-    movie_rand_sample = get_movies[:500].sample(n=10)
+    movie_rand_sample = get_movies[:500].sample(n=100)
 
     reviews = []
 
@@ -150,7 +157,10 @@ def get_user_reviews():
                             'title': movie['title']}
             reviews.append(movie_rating)
             clear_output()
-    return pd.DataFrame(reviews)
+            if len(reviews) >=10:
+                return pd.DataFrame(reviews)
+            else:
+                continue
 
 
 def get_recommendations(new_user_df, new_user=101):
@@ -168,18 +178,18 @@ def get_recommendations(new_user_df, new_user=101):
     
     new_user_spark = spark.createDataFrame(new_user_df)
 
-    all_reviews = spark.read.json('data/all_reviews.json')
+    all_reviews = spark.read.json('data/all_reviews_fixed_titles.json')
     
     # Combine user reviews with others and prep for modeling
     ratings_all = all_reviews.select(['count', 'item_id','overall','title','user_id'])\
                              .union(new_user_spark)
 
-    als_ready = ratings_all.select([col("user_id").cast(IntegerType()),
-                                  col("item_id").cast(IntegerType()),
-                                  col("overall")])
+    als_ready = ratings_all.select([F.col("user_id").cast(IntegerType()),
+                                  F.col("item_id").cast(IntegerType()),
+                                  F.col("overall")])
     
     # Create ALS model 
-    als = ALS(rank=3, regParam=0.1, 
+    als = ALS(rank=5, regParam=0.01, 
       userCol='user_id', itemCol='item_id', 
       ratingCol='overall', nonnegative=True)
     
@@ -190,7 +200,7 @@ def get_recommendations(new_user_df, new_user=101):
     recs_for_user = user_recommend.where(user_recommend.user_id == new_user).take(1)
     all_comics = [reco[0] for reco in recs_for_user[0]['recommendations']\
                   if str(reco[0]).endswith('22') ]
-    comic_titles = list(set(all_reviews.filter(col('item_id')\
+    comic_titles = list(set(all_reviews.filter(F.col('item_id')\
                                        .isin(all_comics))\
                                        .select('title').collect()))
     for comic in comic_titles[:3]:
