@@ -5,8 +5,9 @@ import pyspark
 import pyspark.sql.functions as F
 from pyspark.ml.recommendation import ALS
 from pyspark.sql.types import StringType, IntegerType
-import urllib
-from io import StringIO
+import urllib.request
+
+
 
 from IPython.display import clear_output
 
@@ -143,7 +144,7 @@ def get_user_reviews():
     reviews = []
 
     # Give a user input and movie title and take in score
-    for index, movie in movie_rand_sample.iterrows():
+    for movie in movie_rand_sample.iterrows():
         print(movie['title'])
         rating = input("How would you rate this movie? (0-5, OR type 'skip'): ")
         # If user has not seen, can enter skip instead
@@ -185,8 +186,8 @@ def get_recommendations(new_user_df, new_user=101):
                              .union(new_user_spark)
 
     als_ready = ratings_all.select([F.col("user_id").cast(IntegerType()),
-                                  F.col("item_id").cast(IntegerType()),
-                                  F.col("overall")])
+                                    F.col("item_id").cast(IntegerType()),
+                                    F.col("overall")])
     
     # Create ALS model 
     als = ALS(rank=5, regParam=0.01, 
