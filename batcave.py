@@ -5,7 +5,7 @@ import pyspark
 import pyspark.sql.functions as F
 from pyspark.ml.recommendation import ALS
 from pyspark.sql.types import StringType, IntegerType
-import urllib.request
+import urllib
 
 
 
@@ -144,7 +144,7 @@ def get_user_reviews():
     reviews = []
 
     # Give a user input and movie title and take in score
-    for movie in movie_rand_sample.iterrows():
+    for index, movie in movie_rand_sample.iterrows():
         print(movie['title'])
         rating = input("How would you rate this movie? (0-5, OR type 'skip'): ")
         # If user has not seen, can enter skip instead
@@ -190,7 +190,7 @@ def get_recommendations(new_user_df, new_user=101):
                                     F.col("overall")])
     
     # Create ALS model 
-    als = ALS(rank=5, regParam=0.01, 
+    als = ALS(rank=50, regParam=0.01, maxIter=20,
       userCol='user_id', itemCol='item_id', 
       ratingCol='overall', nonnegative=True)
     
@@ -204,5 +204,22 @@ def get_recommendations(new_user_df, new_user=101):
     comic_titles = list(set(all_reviews.filter(F.col('item_id')\
                                        .isin(all_comics))\
                                        .select('title').collect()))
-    for comic in comic_titles[:3]:
+    for comic in comic_titles[:4]:
         print(comic[0])
+
+
+def get_item_image(df, directory):
+    """Get images from  dataframe. This is meant specifically to work with metadata dataframe 
+    Args:
+        df: subset dataframe to extract from
+    Returns:
+        saves images to 'images/' folder
+    """
+    for index, item in df.iterrows():
+        url = item['imUrl']
+        # Concats items ASIN and original file extension to create name
+        filename = directory + item['asin'] + item['imUrl'][-4:]
+        try:
+            urllib.request.urlretrieve(url, filename)
+        except:
+            continue
