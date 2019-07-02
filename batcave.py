@@ -218,7 +218,7 @@ def get_item_image(df, directory):
     for index, item in df.iterrows():
         url = item['imUrl']
         # Concats items ASIN and original file extension to create name
-        filename = directory + item['asin'] + item['imUrl'][-4:]
+        filename = directory + str(item['item_id']) + item['imUrl'][-4:]
         try:
             urllib.request.urlretrieve(url, filename)
         except:
@@ -261,6 +261,6 @@ def row_to_html_card(row):
             </div>
         </div>
     </div>
-    
+
     """
     return card_html

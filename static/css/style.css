@@ -1,0 +1,29 @@
+/* Custom CSS*/
+
+  .top-buffer { 
+      margin-top:20px;
+      margin-bottom: 20px;
+  }
+
+.poster-img {
+        height: 300px;
+        width: 100%;
+        background:  -webkit-gradient(linear, right top, left top, from(#cc6429), to(#8d1435));
+        background:  linear-gradient(to left, #cc6429, #8d1435);
+        text-align: center;
+        object-fit: contain;
+}
+
+/* Load more button formatting */
+.btn-load-more {
+    font-size: 20px;
+    color: #fff;
+    background-color: #0351cb;
+    margin: auto;
+    border: 0;
+    outline: 0;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+.btn-load-more:hover { background-color: #000548; }
