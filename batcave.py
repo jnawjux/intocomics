@@ -223,3 +223,44 @@ def get_item_image(df, directory):
             urllib.request.urlretrieve(url, filename)
         except:
             continue
+
+def row_to_html_card(row):
+    """Takes a row from a dataframe and returns the card html needed for the web app
+    Args:
+    row: individual row from Pandas dataframe with title, asin, and item_id
+    Returns:
+    card_html: html text for an html card"""
+    title = row['title']
+    filename = 'images/movies/' + str(row['asin']) + '.jpg'
+    item_id = str(row['item_id'])
+    card_html = f"""
+    <div class="col-md-3">
+        <div class="card bg-light">
+            <img class="card-img-top poster-img" alt="{title}"
+                src="{filename}">
+            <div class="card-block">
+                <h4 class="card-title text-center">
+                    <b>{title}</b>
+                </h4>
+                <div class="container">
+                    <div class="row">
+                        <div class="mx-auto">
+                            <input type="radio" id="star1" name="{item_id}"
+                                value=1 /><label for="star1" title="HATE">1</label>
+                            <input type="radio" id="star2" name="{item_id}"
+                                value=2 /><label for="star2" title="Meh">2</label>
+                            <input type="radio" id="star3" name="{item_id}"
+                                value=3 /><label for="star3" title="Just okay">3</label>
+                            <input type="radio" id="star4" name="{item_id}"
+                                value=4 /><label for="star4" title="Good">4</label>
+                            <input type="radio" id="star5" name="{item_id}"
+                                value=5 /><label for="star5" title="Love it!">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    """
+    return card_html
