@@ -8,16 +8,40 @@
 
 		<title>NextComic</title>
 
-		<meta name="description" content="Web App to discover your next comic book find">
+		<meta name="description" content="Web App to discover your next comic book
+			find">
 		<meta name="author" content="John Naujoks">
 
 		<link href="css/bootstrap-material-design.min.css" rel="stylesheet">
 		<link href="css/style.css" rel="stylesheet">
 
+		<script type="text/javascript" src="brython.js"></script>
+		<script type="text/javascript" src="brython_stdlib.js"></script>
 	</head>
 
-	<body>
-
+	<body onload="brython(1)">
+		<script type="text/python3">
+			from browser import document, ajax
+			import json
+			import warnings
+		
+			def show_results(response):
+				if response.status==200 or response.status==0:
+					document["result"].html = response.text
+				else:
+					warnings.warn(response.text)
+		
+			def get_prediction(ev):
+				"""Get the predicted probability."""
+				req = ajax.ajax()
+				req.bind('complete', show_results)
+				req.open('POST', '/process', True)
+				req.set_header('content-type','application/json')
+				data = json.dumps({'test_one': document['6844'].value})
+				req.send(data)
+		
+			document["recommend_button"].bind("click", get_prediction)
+		</script>
 		<div class="container">
 			<nav class="navbar navbar-expand-lg static-top navbar-dark bg-dark">
 				<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -38,6 +62,7 @@
 					</div>
 				</nav>
 				<div class="row">
+					<form action="/process" method="POST">
 					<div class="col-md-12">
 
 						<div class="jumbotron card card-block sticky-top text-center">
@@ -48,29 +73,19 @@
 								Looking to get into comic books but don't know where to start? Rate
 								movies you know and find out what to read next!
 							</p>
-							<button class="btn btn-raised btn-primary btn-lg">See your
+							<button type="submit" class="btn btn-raised btn-primary btn-lg start" id="btnStartUploads recommend_button" data-loading-text="<i class='icon-spinner icon-spin icon-large'></i> @Localization.Uploading">See
+								your
 								recommendations!</button>
 							<p><em>Rate at least 5 movies to activate</em></p>
-							<div class="col-md-3">
-								<div class="card result"></div>
-							</div>
-							<!--<div class="col-md-3">
-								<div class="card"></div>
-							</div>
-							<div class="col-md-3">
-								<div class="card"></div>
-							</div>
-							<div class="col-md-3">
-								<div class="card"></div>
-							</div>-->
-
+							{{ comic_recs }}
 						</div>
 						<div class="row movie-sets">
 							<div class="col-md-12 loadMore">
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Inception"src="images/movies/B002ZG980U.jpg">
+											<img class="card-img-top poster-img" alt="Inception"
+												src="images/movies/B002ZG980U.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Inception </b>
@@ -151,7 +166,7 @@
 									<div class="col-md-3">
 										<div class="card bg-light">
 											<img class="card-img-top poster-img" alt="Indiana Jones and the
-												Kingdom of the Crystal Skull"src="images/movies/B00005JPO1.jpg">
+												Kingdom of the Crystal Skull" src="images/movies/B00005JPO1.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Indiana Jones and the Kingdom of the Crystal Skull </b>
@@ -343,7 +358,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Akira"src="images/movies/6303305520.jpg">
+											<img class="card-img-top poster-img" alt="Akira"
+												src="images/movies/6303305520.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Akira </b>
@@ -398,7 +414,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Memento"src="images/movies/B00003CXZ3.jpg">
+											<img class="card-img-top poster-img" alt="Memento"
+												src="images/movies/B00003CXZ3.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Memento </b>
@@ -478,7 +495,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Jaws"src="images/movies/0783216084.jpg">
+											<img class="card-img-top poster-img" alt="Jaws"
+												src="images/movies/0783216084.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Jaws </b>
@@ -506,7 +524,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Kill Bill, Vol. 2"src="images/movies/B00005JMUA.jpg">
+											<img class="card-img-top poster-img" alt="Kill Bill, Vol. 2"
+												src="images/movies/B00005JMUA.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Kill Bill, Vol. 2 </b>
@@ -559,7 +578,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Galaxy Quest"src="images/movies/0783241038.jpg">
+											<img class="card-img-top poster-img" alt="Galaxy Quest"
+												src="images/movies/0783241038.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Galaxy Quest </b>
@@ -641,12 +661,12 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Snow White and the Seven
+											<img class="card-img-top poster-img" alt=" Whit White and the Seven
 												Dwarfs - Platinum Edition"
 												src="images/movies/0788828126.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
-													<b>Snow White and the Seven Dwarfs - Platinum Edition</b>
+													<b>Snow White and the Seven Dwarfs </b>
 												</h4>
 												<div class="container">
 													<div class="row">
@@ -669,7 +689,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Walk the Line"src="images/movies/B00005JO1R.jpg">
+											<img class="card-img-top poster-img" alt="Walk the Line"
+												src="images/movies/B00005JO1R.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Walk the Line </b>
@@ -752,7 +773,7 @@
 									<div class="col-md-3">
 										<div class="card bg-light">
 											<img class="card-img-top poster-img" alt="Back to the Future - The
-												Complete Trilogy"src="images/movies/B00006AL1D.jpg">
+												Complete Trilogy" src="images/movies/B00006AL1D.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Back to the Future</b>
@@ -805,7 +826,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="The Shining"src="images/movies/0790705141.jpg">
+											<img class="card-img-top poster-img" alt="The Shining"
+												src="images/movies/0790705141.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>The Shining </b>
@@ -833,7 +855,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Ghostbusters"src="images/movies/0767825411.jpg">
+											<img class="card-img-top poster-img" alt="Ghostbusters"
+												src="images/movies/0767825411.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Ghostbusters </b>
@@ -859,7 +882,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Robocop"src="images/movies/0792845730.jpg">
+											<img class="card-img-top poster-img" alt="Robocop"
+												src="images/movies/0792845730.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Robocop </b>
@@ -886,7 +910,7 @@
 									<div class="col-md-3">
 										<div class="card bg-light">
 											<img class="card-img-top poster-img" alt="Anchorman: The Legend of
-												Ron Burgundy"src="images/movies/B00005JMYI.jpg">
+												Ron Burgundy" src="images/movies/B00005JMYI.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Anchorman: The Legend of Ron Burgundy </b>
@@ -912,7 +936,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Casablanca"src="images/movies/0790743132.gif">
+											<img class="card-img-top poster-img" alt="Casablanca"
+												src="images/movies/0790743132.gif">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Casablanca </b>
@@ -967,7 +992,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Super Size Me"src="images/movies/B0000B1OC4.jpg">
+											<img class="card-img-top poster-img" alt="Super Size Me"
+												src="images/movies/B0000B1OC4.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Super Size Me </b>
@@ -1076,7 +1102,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Maltese Falcon / Movie"src="images/movies/6301972023.jpg">
+											<img class="card-img-top poster-img" alt="Maltese Falcon / Movie"
+												src="images/movies/6301972023.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Maltese Falcon</b>
@@ -1102,7 +1129,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Beauty and the Beast"src="images/movies/6302526574.jpg">
+											<img class="card-img-top poster-img" alt="Beauty and the Beast"
+												src="images/movies/6302526574.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Beauty and the Beast </b>
@@ -1157,7 +1185,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Dogma"src="images/movies/0767849493.jpg">
+											<img class="card-img-top poster-img" alt="Dogma"
+												src="images/movies/0767849493.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Dogma </b>
@@ -1184,7 +1213,7 @@
 									<div class="col-md-3">
 										<div class="card bg-light">
 											<img class="card-img-top poster-img" alt="Citizen Kane Collectors
-												Edition"src="images/movies/Citizenkane.jpg">
+												Edition" src="images/movies/Citizenkane.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Citizen Kane</b>
@@ -1237,7 +1266,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Catch Me If You Can"src="images/movies/B00005JLSB.jpg">
+											<img class="card-img-top poster-img" alt="Catch Me If You Can"
+												src="images/movies/B00005JLSB.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Catch Me If You Can </b>
@@ -1265,7 +1295,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Jurassic Park"src="images/movies/0783222734.jpg">
+											<img class="card-img-top poster-img" alt="Jurassic Park"
+												src="images/movies/0783222734.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Jurassic Park </b>
@@ -1318,7 +1349,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Mary Poppins"src="images/movies/6300274187.jpg">
+											<img class="card-img-top poster-img" alt="Mary Poppins"
+												src="images/movies/6300274187.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Mary Poppins </b>
@@ -1374,7 +1406,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Sideways"src="images/movies/B0007RUSGW.jpg">
+											<img class="card-img-top poster-img" alt="Sideways"
+												src="images/movies/B0007RUSGW.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Sideways </b>
@@ -1400,7 +1433,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Fargo"src="images/movies/0792842081.jpg">
+											<img class="card-img-top poster-img" alt="Fargo"
+												src="images/movies/0792842081.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Fargo </b>
@@ -1453,7 +1487,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Psycho"src="images/movies/0783225849.jpg">
+											<img class="card-img-top poster-img" alt="Psycho"
+												src="images/movies/0783225849.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Psycho </b>
@@ -1481,7 +1516,8 @@
 								<div class="row top-buffer">
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Rocketeer"src="images/movies/6302269431.jpg">
+											<img class="card-img-top poster-img" alt="Rocketeer"
+												src="images/movies/6302269431.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>The Rocketeer </b>
@@ -1535,7 +1571,8 @@
 									</div>
 									<div class="col-md-3">
 										<div class="card bg-light">
-											<img class="card-img-top poster-img" alt="Titanic"src="images/movies/0792151712.jpg">
+											<img class="card-img-top poster-img" alt="Titanic"
+												src="images/movies/0792151712.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>Titanic </b>
@@ -1562,7 +1599,7 @@
 									<div class="col-md-3">
 										<div class="card bg-light">
 											<img class="card-img-top poster-img" alt="North by Northwest -
-												Special Edition"src="images/movies/0790743213.jpg">
+												Special Edition" src="images/movies/0790743213.jpg">
 											<div class="card-block">
 												<h4 class="card-title text-center">
 													<b>North by Northwest</b>
@@ -1588,106 +1625,110 @@
 									</div>
 								</div>
 								<div class="row top-buffer">
-								<div class="col-md-3">
-									<div class="card bg-light">
-										<img class="card-img-top poster-img" alt="The Shawshank Redemption"src="images/movies/0780623134.jpg">
-										<div class="card-block">
-											<h4 class="card-title text-center">
-												<b>The Shawshank Redemption </b>
-											</h4>
-											<div class="container">
-												<div class="row">
-													<div class="mx-auto">
-														<input type="radio" id="star1" name="1047044"
-															value=1 /><label for="star1" title="HATE">1</label>
-														<input type="radio" id="star2" name="1047044"
-															value=2 /><label for="star2" title="Meh">2</label>
-														<input type="radio" id="star3" name="1047044"
-															value=3 /><label for="star3" title="Just okay">3</label>
-														<input type="radio" id="star4" name="1047044"
-															value=4 /><label for="star4" title="Good">4</label>
-														<input type="radio" id="star5" name="1047044"
-															value=5 /><label for="star5" title="Love it!">5</label>
+									<div class="col-md-3">
+										<div class="card bg-light">
+											<img class="card-img-top poster-img" alt="The Shawshank Redemption"
+												src="images/movies/0780623134.jpg">
+											<div class="card-block">
+												<h4 class="card-title text-center">
+													<b>The Shawshank Redemption </b>
+												</h4>
+												<div class="container">
+													<div class="row">
+														<div class="mx-auto">
+															<input type="radio" id="star1" name="1047044"
+																value=1 /><label for="star1" title="HATE">1</label>
+															<input type="radio" id="star2" name="1047044"
+																value=2 /><label for="star2" title="Meh">2</label>
+															<input type="radio" id="star3" name="1047044"
+																value=3 /><label for="star3" title="Just okay">3</label>
+															<input type="radio" id="star4" name="1047044"
+																value=4 /><label for="star4" title="Good">4</label>
+															<input type="radio" id="star5" name="1047044"
+																value=5 /><label for="star5" title="Love it!">5</label>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card bg-light">
-										<img class="card-img-top poster-img" alt="Fifth Element"src="images/movies/0767805267.jpg">
-										<div class="card-block">
-											<h4 class="card-title text-center">
-												<b>Fifth Element </b>
-											</h4>
-											<div class="container">
-												<div class="row">
-													<div class="mx-auto">
-														<input type="radio" id="star1" name="605744"
-															value=1 /><label for="star1" title="HATE">1</label>
-														<input type="radio" id="star2" name="605744"
-															value=2 /><label for="star2" title="Meh">2</label>
-														<input type="radio" id="star3" name="605744"
-															value=3 /><label for="star3" title="Just okay">3</label>
-														<input type="radio" id="star4" name="605744"
-															value=4 /><label for="star4" title="Good">4</label>
-														<input type="radio" id="star5" name="605744"
-															value=5 /><label for="star5" title="Love it!">5</label>
+									<div class="col-md-3">
+										<div class="card bg-light">
+											<img class="card-img-top poster-img" alt="Fifth Element"
+												src="images/movies/0767805267.jpg">
+											<div class="card-block">
+												<h4 class="card-title text-center">
+													<b>Fifth Element </b>
+												</h4>
+												<div class="container">
+													<div class="row">
+														<div class="mx-auto">
+															<input type="radio" id="star1" name="605744"
+																value=1 /><label for="star1" title="HATE">1</label>
+															<input type="radio" id="star2" name="605744"
+																value=2 /><label for="star2" title="Meh">2</label>
+															<input type="radio" id="star3" name="605744"
+																value=3 /><label for="star3" title="Just okay">3</label>
+															<input type="radio" id="star4" name="605744"
+																value=4 /><label for="star4" title="Good">4</label>
+															<input type="radio" id="star5" name="605744"
+																value=5 /><label for="star5" title="Love it!">5</label>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card bg-light">
-										<img class="card-img-top poster-img" alt="Bridesmaids"
-											src="images/movies/B00466HN7M.jpg">
-										<div class="card-block">
-											<h4 class="card-title text-center">
-												<b>Bridesmaids</b>
-											</h4>
-											<div class="container">
-												<div class="row">
-													<div class="mx-auto">
-														<input type="radio" id="star1" name="889244"
-															value=1 /><label for="star1" title="HATE">1</label>
-														<input type="radio" id="star2" name="889244"
-															value=2 /><label for="star2" title="Meh">2</label>
-														<input type="radio" id="star3" name="889244"
-															value=3 /><label for="star3" title="Just okay">3</label>
-														<input type="radio" id="star4" name="889244"
-															value=4 /><label for="star4" title="Good">4</label>
-														<input type="radio" id="star5" name="889244"
-															value=5 /><label for="star5" title="Love it!">5</label>
+									<div class="col-md-3">
+										<div class="card bg-light">
+											<img class="card-img-top poster-img" alt="Bridesmaids"
+												src="images/movies/B00466HN7M.jpg">
+											<div class="card-block">
+												<h4 class="card-title text-center">
+													<b>Bridesmaids</b>
+												</h4>
+												<div class="container">
+													<div class="row">
+														<div class="mx-auto">
+															<input type="radio" id="star1" name="889244"
+																value=1 /><label for="star1" title="HATE">1</label>
+															<input type="radio" id="star2" name="889244"
+																value=2 /><label for="star2" title="Meh">2</label>
+															<input type="radio" id="star3" name="889244"
+																value=3 /><label for="star3" title="Just okay">3</label>
+															<input type="radio" id="star4" name="889244"
+																value=4 /><label for="star4" title="Good">4</label>
+															<input type="radio" id="star5" name="889244"
+																value=5 /><label for="star5" title="Love it!">5</label>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card bg-light">
-										<img class="card-img-top poster-img" alt="A Nightmare on Elm Street"
-											src="images/movies/B002ZG971U.jpg">
-										<div class="card-block">
-											<h4 class="card-title text-center">
-												<b>A Nightmare on Elm Street</b>
-											</h4>
-											<div class="container">
-												<div class="row">
-													<div class="mx-auto">
-														<input type="radio" id="star1" name="2908744"
-															value=1 /><label for="star1" title="HATE">1</label>
-														<input type="radio" id="star2" name="2908744"
-															value=2 /><label for="star2" title="Meh">2</label>
-														<input type="radio" id="star3" name="2908744"
-															value=3 /><label for="star3" title="Just okay">3</label>
-														<input type="radio" id="star4" name="2908744"
-															value=4 /><label for="star4" title="Good">4</label>
-														<input type="radio" id="star5" name="2908744"
-															value=5 /><label for="star5" title="Love it!">5</label>
+									<div class="col-md-3">
+										<div class="card bg-light">
+											<img class="card-img-top poster-img" alt="A Nightmare on Elm Street"
+												src="images/movies/B002ZG971U.jpg">
+											<div class="card-block">
+												<h4 class="card-title text-center">
+													<b>A Nightmare on Elm Street</b>
+												</h4>
+												<div class="container">
+													<div class="row">
+														<div class="mx-auto">
+															<input type="radio" id="star1" name="2908744"
+																value=1 /><label for="star1" title="HATE">1</label>
+															<input type="radio" id="star2" name="2908744"
+																value=2 /><label for="star2" title="Meh">2</label>
+															<input type="radio" id="star3" name="2908744"
+																value=3 /><label for="star3" title="Just okay">3</label>
+															<input type="radio" id="star4" name="2908744"
+																value=4 /><label for="star4" title="Good">4</label>
+															<input type="radio" id="star5" name="2908744"
+																value=5 /><label for="star5" title="Love it!">5</label>
+															
+														</div>
 													</div>
 												</div>
 											</div>
@@ -1697,16 +1738,16 @@
 							</div>
 						</div>
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap-material-design.min.js"></script>
-	<script src="js/scripts.js"></script>
-	<script src="js/loadMoreResults.js"></script>
-	<script type="text/javascript">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap-material-design.min.js"></script>
+		<script src="js/scripts.js"></script>
+		<script src="js/loadMoreResults.js"></script>
+		<script type="text/javascript">
 				$('.movie-sets .loadMore').loadMoreResults({
 					tag: {
 					name: 'div',
@@ -1716,7 +1757,7 @@
 					showItems: 2
 				});
 			</script>
-	<script type="text/javascript">
+		<script type="text/javascript">
 			<script type="text/javascript">
 		</body>
 
