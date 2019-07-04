@@ -24,8 +24,6 @@ def index():
     """Return the main page."""
     return render_template('index.html')
 
-if __name__ == '__main_':
-    app.run(port=8080)    #note set to 8080!
 
 @app.route("/process", methods = ["GET", "POST"] )
 def process_form():
@@ -42,7 +40,7 @@ def process_form():
                              .union(user_df)
 
     # Create ALS model 
-    als = ALS(rank=50, regParam=0.01, maxIter=20,
+    als = ALS(rank=5, regParam=0.01, 
       userCol='user_id', itemCol='item_id', 
       ratingCol='overall', nonnegative=True)
     
@@ -57,4 +55,8 @@ def process_form():
                                        .isin(all_comics))\
                                        .select(['item_id', 'title']).collect()))
 
-    return render_template('index.html', comic_recs = comic_titles)
+    top_recommendations = {}
+    for comic in comic_titles[:4]:
+        top_recommendations[comic[1]] = 'images/comics/' + str(comic[0]) + '.jpg'
+
+    return render_template('results.html', comic_titles = top_recommendations)

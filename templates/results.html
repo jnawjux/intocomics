@@ -16,10 +16,19 @@
 		<link href="css/style.css" rel="stylesheet">
 
 		<script type="text/javascript" src="brython.js"></script>
-		<script type="text/javascript" src="brython_stdlib.js"></script>
+        <script type="text/javascript" src="brython_stdlib.js"></script>
+        <script src="js/jquery.min.js">
+                <script type="text/javascript">
+            $(window).on('load',function(){
+                $('#myModal').modal('show');
+            });
+        </script>
+        </script>
+
 	</head>
 
-	<body onload="brython(1)">
+    <body onload="brython(1)">
+
 		<script type="text/python3">
 			from browser import document, ajax
 			import json
@@ -41,8 +50,21 @@
 				req.send(data)
 		
 			document["recommend_button"].bind("click", get_prediction)
-		</script>
+        </script>
 		<div class="container">
+                <div class="modal hide fade" id="myModal">
+                        <div class="modal-header">
+                          <a class="close" data-dismiss="modal">×</a>
+                          <h3>Modal header</h3>
+                        </div>
+                        <div class="modal-body">
+                          <p>One fine body…</p>
+                        </div>
+                        <div class="modal-footer">
+                          <a href="#" class="btn">Close</a>
+                          <a href="#" class="btn btn-primary">Save changes</a>
+                        </div>
+                      </div>
 			<nav class="navbar navbar-expand-lg static-top navbar-dark bg-dark">
 				<button class="navbar-toggler" type="button" data-toggle="collapse"
 					data-target="#bs-example-navbar-collapse-1">
@@ -60,22 +82,32 @@
 								</li>
 							</ul>--->
 					</div>
-				</nav>
+                </nav>
+            
 				<div class="row">
 					<form action="/process" method="POST">
 					<div class="col-md-12">
 
 						<div class="jumbotron card card-block sticky-top text-center">
 							<h1>
-									🎞 ➡ 💬
+                                    🎞 ➡ 💬
 							</h1>
-							<p>
-								Looking to get into comic books but don't know where to start? Rate
-								movies you know and find out what to read next!
-							</p>
-							<button type="submit" class="btn btn-raised btn-primary btn-lg start" id="btnStartUploads recommend_button" >
-								See your recommendations!</button>
-							<p><em>Rate at least 5 movies to activate</em></p>
+                            <div class="row">
+							{% for k, v in  comic_titles.items() %}
+							<div class="col-md-3">
+									<div class="card bg-light">
+										<img class="card-img-top poster-img" alt="Inception"
+											src= " {{ v }} ">
+										<div class="card-block">
+											<h5 class="card-title text-center">
+												<b> {{ k }} </b>
+											</h5>
+										</div>
+									</div>
+								</div>
+                             {% endfor %}
+                            </div>
+                            <button href="/index.html" class="btn btn-raised btn-primary btn-lg start" >Try again</button>
 						</div>
 						<div class="row movie-sets">
 							<div class="col-md-12 loadMore">
@@ -85,9 +117,9 @@
 											<img class="card-img-top poster-img" alt="Inception"
 												src="images/movies/B002ZG980U.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Inception </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -112,9 +144,9 @@
 											<img class="card-img-top poster-img" alt="Prometheus"
 												src="images/movies/B005LAIHXQ.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Prometheus</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -139,9 +171,9 @@
 											<img class="card-img-top poster-img" alt="Shaun of the Dead"
 												src="images/movies/B0002MJT0I.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Shaun of the Dead</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -166,9 +198,9 @@
 											<img class="card-img-top poster-img" alt="Indiana Jones and the
 												Kingdom of the Crystal Skull" src="images/movies/B00005JPO1.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Indiana Jones and the Kingdom of the Crystal Skull </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -195,9 +227,9 @@
 											<img class="card-img-top poster-img" alt="Frozen Region Free"
 												src="images/movies/B00FZM8Z7I.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Frozen</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -222,9 +254,9 @@
 											<img class="card-img-top poster-img" alt="Up"
 												src="images/movies/B001KVZ6FW.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Up</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -249,9 +281,9 @@
 											<img class="card-img-top poster-img" alt="No Country for Old Men"
 												src="images/movies/0788882988.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>No Country for Old Men</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -276,9 +308,9 @@
 											<img class="card-img-top poster-img" alt="Inglourious Basterds"
 												src="images/movies/B002RD55JE.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Inglourious Basterds</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -305,9 +337,9 @@
 											<img class="card-img-top poster-img" alt="Despicable Me"
 												src="images/movies/B002ZG97E2.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Despicable Me</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -332,9 +364,9 @@
 											<img class="card-img-top poster-img" alt="Gravity"
 												src="images/movies/B00H83EUL2.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Gravity</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -359,9 +391,9 @@
 											<img class="card-img-top poster-img" alt="Akira"
 												src="images/movies/6303305520.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Akira </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -386,9 +418,9 @@
 											<img class="card-img-top poster-img" alt="Napoleon Dynamite"
 												src="images/movies/B00005JNBQ.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Napoleon Dynamite</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -415,9 +447,9 @@
 											<img class="card-img-top poster-img" alt="Memento"
 												src="images/movies/B00003CXZ3.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Memento </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -442,9 +474,9 @@
 											<img class="card-img-top poster-img" alt="The Matrix"
 												src="images/movies/0790745399.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Matrix</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -469,9 +501,9 @@
 											<img class="card-img-top poster-img" alt="Black Swan"
 												src="images/movies/B0041KKYEM.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Black Swan</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -496,9 +528,9 @@
 											<img class="card-img-top poster-img" alt="Jaws"
 												src="images/movies/0783216084.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Jaws </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -525,9 +557,9 @@
 											<img class="card-img-top poster-img" alt="Kill Bill, Vol. 2"
 												src="images/movies/B00005JMUA.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Kill Bill, Vol. 2 </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -552,9 +584,9 @@
 											<img class="card-img-top poster-img" alt="The Wizard of Oz"
 												src="images/movies/0792833171.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Wizard of Oz</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -579,9 +611,9 @@
 											<img class="card-img-top poster-img" alt="Galaxy Quest"
 												src="images/movies/0783241038.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Galaxy Quest </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -606,9 +638,9 @@
 											<img class="card-img-top poster-img" alt="District 9"
 												src="images/movies/B002SJIO4A.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>District 9</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -635,9 +667,9 @@
 											<img class="card-img-top poster-img" alt="Children of Men"
 												src="images/movies/children-of-men.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Children of Men</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -663,9 +695,9 @@
 												Dwarfs - Platinum Edition"
 												src="images/movies/0788828126.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Snow White and the Seven Dwarfs </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -690,9 +722,9 @@
 											<img class="card-img-top poster-img" alt="Walk the Line"
 												src="images/movies/B00005JO1R.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Walk the Line </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -717,9 +749,9 @@
 											<img class="card-img-top poster-img" alt="Amelie"
 												src="images/movies/B0000640VO.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Amelie</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -746,9 +778,9 @@
 											<img class="card-img-top poster-img" alt="Pulp Fiction"
 												src="images/movies/1558908242.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Pulp Fiction</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -773,9 +805,9 @@
 											<img class="card-img-top poster-img" alt="Back to the Future - The
 												Complete Trilogy" src="images/movies/B00006AL1D.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Back to the Future</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -800,9 +832,9 @@
 											<img class="card-img-top poster-img" alt="Juno"
 												src="images/movies/B000YABYLA.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Juno</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -827,9 +859,9 @@
 											<img class="card-img-top poster-img" alt="The Shining"
 												src="images/movies/0790705141.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Shining </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -856,9 +888,9 @@
 											<img class="card-img-top poster-img" alt="Ghostbusters"
 												src="images/movies/0767825411.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Ghostbusters </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -883,9 +915,9 @@
 											<img class="card-img-top poster-img" alt="Robocop"
 												src="images/movies/0792845730.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Robocop </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -910,9 +942,9 @@
 											<img class="card-img-top poster-img" alt="Anchorman: The Legend of
 												Ron Burgundy" src="images/movies/B00005JMYI.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Anchorman: The Legend of Ron Burgundy </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -937,9 +969,9 @@
 											<img class="card-img-top poster-img" alt="Casablanca"
 												src="images/movies/0790743132.gif">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Casablanca </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -966,9 +998,9 @@
 											<img class="card-img-top poster-img" alt="Lincoln"
 												src="images/movies/B009AMANBA.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Lincoln</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -993,9 +1025,9 @@
 											<img class="card-img-top poster-img" alt="Super Size Me"
 												src="images/movies/B0000B1OC4.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Super Size Me </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1020,9 +1052,9 @@
 											<img class="card-img-top poster-img" alt="21 Jump Street"
 												src="images/movies/B003Y5H5B0.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>21 Jump Street</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1047,9 +1079,9 @@
 											<img class="card-img-top poster-img" alt="Brokeback Mountain"
 												src="images/movies/1417030321.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Brokeback Mountain</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1076,9 +1108,9 @@
 											<img class="card-img-top poster-img" alt="Knocked Up"
 												src="images/movies/B000TZJBP6.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Knocked Up</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1103,9 +1135,9 @@
 											<img class="card-img-top poster-img" alt="Maltese Falcon / Movie"
 												src="images/movies/6301972023.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Maltese Falcon</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1130,9 +1162,9 @@
 											<img class="card-img-top poster-img" alt="Beauty and the Beast"
 												src="images/movies/6302526574.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Beauty and the Beast </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1157,9 +1189,9 @@
 											<img class="card-img-top poster-img" alt="The Muppets"
 												src="images/movies/B004EPZ03O.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Muppets</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1186,9 +1218,9 @@
 											<img class="card-img-top poster-img" alt="Dogma"
 												src="images/movies/0767849493.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Dogma </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1213,9 +1245,9 @@
 											<img class="card-img-top poster-img" alt="Citizen Kane Collectors
 												Edition" src="images/movies/Citizenkane.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Citizen Kane</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1240,9 +1272,9 @@
 											<img class="card-img-top poster-img" alt="Silver Linings Playbook"
 												src="images/movies/B008OGIPJA.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Silver Linings Playbook</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1267,9 +1299,9 @@
 											<img class="card-img-top poster-img" alt="Catch Me If You Can"
 												src="images/movies/B00005JLSB.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Catch Me If You Can </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1296,9 +1328,9 @@
 											<img class="card-img-top poster-img" alt="Jurassic Park"
 												src="images/movies/0783222734.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Jurassic Park </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1323,9 +1355,9 @@
 											<img class="card-img-top poster-img" alt="Moonrise Kingdom"
 												src="images/movies/B007L6VR12.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Moonrise Kingdom</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1350,9 +1382,9 @@
 											<img class="card-img-top poster-img" alt="Mary Poppins"
 												src="images/movies/6300274187.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Mary Poppins </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1378,9 +1410,9 @@
 												[Region 2]"
 												src="images/movies/B000JU9OJ4.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Little Miss Sunshine</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1407,9 +1439,9 @@
 											<img class="card-img-top poster-img" alt="Sideways"
 												src="images/movies/B0007RUSGW.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Sideways </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1434,9 +1466,9 @@
 											<img class="card-img-top poster-img" alt="Fargo"
 												src="images/movies/0792842081.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Fargo </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1461,9 +1493,9 @@
 											<img class="card-img-top poster-img" alt="The Great Gatsby"
 												src="images/movies/B0067EKYS6.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Great Gatsby</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1488,9 +1520,9 @@
 											<img class="card-img-top poster-img" alt="Psycho"
 												src="images/movies/0783225849.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Psycho </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1517,9 +1549,9 @@
 											<img class="card-img-top poster-img" alt="Rocketeer"
 												src="images/movies/6302269431.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Rocketeer </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1545,9 +1577,9 @@
 												Prince Caspian"
 												src="images/movies/B00005JPH2.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Chronicles of Narnia: Prince Caspian</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1572,9 +1604,9 @@
 											<img class="card-img-top poster-img" alt="Titanic"
 												src="images/movies/0792151712.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Titanic </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1599,9 +1631,9 @@
 											<img class="card-img-top poster-img" alt="North by Northwest -
 												Special Edition" src="images/movies/0790743213.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>North by Northwest</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1628,9 +1660,9 @@
 											<img class="card-img-top poster-img" alt="The Shawshank Redemption"
 												src="images/movies/0780623134.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>The Shawshank Redemption </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1655,9 +1687,9 @@
 											<img class="card-img-top poster-img" alt="Fifth Element"
 												src="images/movies/0767805267.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Fifth Element </b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1682,9 +1714,9 @@
 											<img class="card-img-top poster-img" alt="Bridesmaids"
 												src="images/movies/B00466HN7M.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>Bridesmaids</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1709,9 +1741,9 @@
 											<img class="card-img-top poster-img" alt="A Nightmare on Elm Street"
 												src="images/movies/B002ZG971U.jpg">
 											<div class="card-block">
-												<h4 class="card-title text-center">
+												<h5 class="card-title text-center">
 													<b>A Nightmare on Elm Street</b>
-												</h4>
+												</h5>
 												<div class="container">
 													<div class="row">
 														<div class="mx-auto">
@@ -1741,8 +1773,8 @@
 			</div>
 		</div>
 
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap-material-design.js"></script>
+		
+		<script src="js/bootstrap-material-design.min.js"></script>
 		<script src="js/scripts.js"></script>
 		<script src="js/loadMoreResults.js"></script>
 		<script type="text/javascript">

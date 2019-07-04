@@ -1,9 +1,13 @@
 /* Custom CSS*/
 
-  .top-buffer { 
-      margin-top:20px;
-      margin-bottom: 20px;
-  }
+body {
+  background-color: #f9c500;
+}
+
+.top-buffer { 
+    margin-top:20px;
+    margin-bottom: 20px;
+}
 
 .poster-img {
         height: 300px;
@@ -26,4 +30,7 @@
     cursor: pointer;
   }
   
-.btn-load-more:hover { background-color: #000548; }
+.btn-load-more:hover { 
+    background-color: #000548;
+   }
+
