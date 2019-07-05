@@ -14,7 +14,7 @@ spark = (pyspark.sql.SparkSession.builder
 .getOrCreate())
 
 # Load and persist ratings set
-all_reviews = spark.read.json('data/all_reviews_fixed_titles.json')
+all_reviews = spark.read.json('../../data/all_reviews_fixed_titles.json')
 all_reviews.persist()
 
 app = Flask(__name__, static_url_path="")

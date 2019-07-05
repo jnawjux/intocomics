@@ -108,7 +108,3 @@ reviews_Books.json
 reviews_Movies_and_TV.json
 meta_Movies_and_TV.json
 meta_Books.json
-
-#Temporarily ignoring images
-images/comics/*
-images/movies/*
