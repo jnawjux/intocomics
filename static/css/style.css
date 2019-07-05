@@ -2,11 +2,24 @@
 
 body {
   background-color: #f9c500;
+  font-family: 'Oswald', sans-serif;
+}
+
+h1, h2, h3, h4, h5 h6 {
+  font-family: 'Bangers', cursive;
+}
+
+.intro {
+    margin-left: .1em;
+    margin-top: .5em;
 }
 
 .top-buffer { 
-    margin-top:20px;
-    margin-bottom: 20px;
+    margin-top:.5em;
+}
+
+.comic-buffer {
+  margin-top: .5em;
 }
 
 .poster-img {
@@ -18,11 +31,19 @@ body {
         object-fit: contain;
 }
 
+.btn {
+  background-color: #2BBBAD;
+}
+
+.btn:disabled {
+  background-color: dimgrey;
+}
+
 /* Load more button formatting */
 .btn-load-more {
     font-size: 20px;
     color: #fff;
-    background-color: #0351cb;
+    background-color:#2BBBAD;
     margin: auto;
     border: 0;
     outline: 0;
@@ -31,6 +52,90 @@ body {
   }
   
 .btn-load-more:hover { 
-    background-color: #000548;
+    background-color:#2BBBAD;
    }
 
+.btn:disabled {
+     border: 1px solid #999999;
+     background-color: #cccccc;
+     color: #666666;
+   }
+
+
+.modal {
+}
+
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    height:inherit;
+    /* To center horizontally */
+    margin: 5 auto;
+}
+
+.rec_button {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+}
+
+#sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1;
+  transition: all 0.3s;
+  padding-top: 10px;
+  overflow-y: scroll;
+}
+
+#sidebar-wrapper.active {
+  margin-left: -20rem;
+}
+
+#content {
+  width: calc(100% - 20rem);
+  min-height: 100vh;
+  transition: all 0.3s;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#content.active {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+      margin-left: -20rem;
+  }
+  #sidebar-wrapper.active {
+      margin-left: 0;
+  }
+  #content {
+      width: 100%;
+  }
+  #content.active {
+      width: calc(100% - 20rem);
+  }
+  #sidebarCollapse span {
+      display: none;
+  }
+}

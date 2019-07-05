@@ -22,7 +22,7 @@ app = Flask(__name__, static_url_path="")
 @app.route('/')
 def index():
     """Return the main page."""
-    return render_template('index.html')
+    return render_template('index.html', comic_titles={})
 
 
 @app.route("/process", methods = ["GET", "POST"] )
@@ -56,7 +56,7 @@ def process_form():
                                        .select(['item_id', 'title']).collect()))
 
     top_recommendations = {}
-    for comic in comic_titles[:4]:
+    for comic in comic_titles:
         top_recommendations[comic[1]] = 'images/comics/' + str(comic[0]) + '.jpg'
 
-    return render_template('results.html', comic_titles = top_recommendations)
+    return render_template('index.html', comic_titles = top_recommendations)
