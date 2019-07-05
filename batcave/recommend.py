@@ -27,12 +27,30 @@ def run_model_on(spark_df):
         spark_df: input Spark Dataframe
     Returns:
         als_model.fit: """
-    als = ALS(rank=1, regParam=0.1, maxIter=1,
+    als = ALS(rank=5, regParam=0.01, maxIter=20,
     userCol='user_id', itemCol='item_id', 
     ratingCol='overall', nonnegative=True)
     
     model = als.fit(spark_df)
     return model
+
+def get_comic_recommendations(spark_df, model, new_user=101):
+    """Take in model and dataframe and return the recommendations that are comic books/graphic novels
+    Args:
+        spark_df: Spark Dataframe with item_id, user_id, rating, and titles
+    Returns:
+        comic_titles: list of comic book titles and item_id
+    """
+    user_recommend = model.recommendForAllUsers(30)
+    recs_for_user = user_recommend.where(user_recommend.user_id == new_user).take(1)
+    
+    all_comics = [reco[0] for reco in recs_for_user[0]['recommendations']\
+                  if str(reco[0]).endswith('22') ]
+    comic_titles = list(set(spark_df.filter(F.col('item_id')\
+                                       .isin(all_comics))\
+                                       .select(['item_id', 'title']).collect()))
+
+    return comic_titles
 
 def get_user_reviews_testing(new_user=101):
     """Take user input and create dataframe added for recommending, built for testing in Jupyter Notebook
@@ -115,13 +133,7 @@ def get_recommendations_testing(new_user_df, new_user=101):
     als_model = run_model_on(ratings_all)
     
     # Get recommendations for user and only return those that are comics & top three
-    user_recommend = als_model.recommendForAllUsers(30)
-    recs_for_user = user_recommend.where(user_recommend.user_id == new_user).take(1)
-    
-    all_comics = [reco[0] for reco in recs_for_user[0]['recommendations']\
-                  if str(reco[0]).endswith('22') ]
-    comic_titles = list(set(all_reviews.filter(F.col('item_id')\
-                                       .isin(all_comics))\
-                                       .select('title').collect()))
-    for comic in comic_titles[:4]:
-        print(comic[0])
+    comic_titles = get_comic_recommendations(ratings_all, model=als_model)
+
+    for comic in comic_titles:
+        print(comic)

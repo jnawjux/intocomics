@@ -1,12 +1,10 @@
-import random
-import pandas as pd
-from selenium.webdriver import Chrome
 import pyspark
 import pyspark.sql.functions as F
 from pyspark.sql import Row
 from pyspark.ml.recommendation import ALS
+from ..recommend import run_model_on
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 
 # Load Spark session
 spark = (pyspark.sql.SparkSession.builder
@@ -40,11 +38,7 @@ def process_form():
                              .union(user_df)
 
     # Create ALS model 
-    als = ALS(rank=5, regParam=0.01, 
-      userCol='user_id', itemCol='item_id', 
-      ratingCol='overall', nonnegative=True)
-    
-    als_model = als.fit(ratings_all)
+    als_model = run_model_on(ratings_all)
     
     # Get recommendations for user and only return those that are comics & top three
     user_recommend = als_model.recommendForAllUsers(50)
