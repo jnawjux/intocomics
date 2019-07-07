@@ -50,7 +50,7 @@
   </head>
 
   <body onload="brython(1)">
-      <form action="/process" method="POST">
+      <form action="/results" method="POST">
     <div class="d-flex" class="wrapper">
       
         <!-- Sidebar -->
@@ -78,21 +78,6 @@
               </button>
               <p><em>Rate at least one movie to activate</em></p>
             </div>
-            {% for k, v in comic_titles.items() %}
-            <div class="row">
-              <div class="col-md-12 comic-buffer">
-                <div class="card bg-light">
-                  <img class="card-img-top poster-img" alt="{{ k }}"
-                    src="{{ v }}">
-                  <div class="card-block">
-                    <p class="card-title text-center">
-                      <b> {{ k }} </b>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
           </div>
         </div>
 
@@ -103,7 +88,7 @@
           <div class="container" id="content">
               <nav class="navbar navbar-expand-lg navbar-light bg-light
               border-bottom">
-              <button class="btn" id="menu-toggle">Toggle Menu</button>
+              <!--<button class="btn" id="menu-toggle">Toggle Menu</button>-->
               <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -113,11 +98,8 @@
   
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="#">GitHub<span class="sr-only">(current)</span></a>
-                  </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">LinkedIn</a>
+                    <a class="nav-link" href="#">GitHub</a>
                   </li>
                 </ul>
               </div>
@@ -140,7 +122,7 @@
                                 <div class="row">
                                   <div class="mx-auto">
                                     <input type="radio" id="star1" name="6844"
-                                      value=1 /><label for="star1" title="HATE">1</label>
+                                      value=1 /><label for="star1" title="Meh">1</label>
                                     <input type="radio" id="star2" name="6844"
                                       value=2 /><label for="star2" title="Meh">2</label>
                                     <input type="radio" id="star3" name="6844"

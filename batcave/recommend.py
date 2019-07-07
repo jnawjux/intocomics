@@ -1,90 +1,45 @@
 import pandas as pd
-import pyspark
-import pyspark.sql.functions as F
-from pyspark.ml.recommendation import ALS
-from pyspark.sql.types import StringType, IntegerType
+import numpy as np
 from IPython.display import clear_output
 
-def create_spark_review_df(filename="data/all_reviews_fixed_titles.json"):
+def get_new_user_matrix(item_df, user_df, rank=50):
     """
-    Return Spark dataframe, default to primary cleaned reviews datafame
+    Take in a new users ratings, align with the existing item factors, and return the user factors
     Args:
-        file (optional): give file to be read in 
+        item_df: item factors dataframe resulting from a Spark Alternating Least Squares (ALS) Model
+        user_df: Pandas dataframe with item_ids and ratings
     Returns:
-        spark_df: Spark dataframe of file
+        new_user_matrix: np.array with calculated new users factors. 
     """
-    # Instantiate Spark & load reviews
-    spark = (pyspark.sql.SparkSession.builder
-    .master("local")
-    .getOrCreate())
+    # User ratings 
+    all_ratings_array = np.array((user_df.rating.tolist(),)).T
+
+    # Get item features for these specific movies
+    all_items_array = np.zeros(shape=(user_df.shape[0], rank))
+
+    for index, item in user_df.iterrows():
+        all_items_array[index, :] = np.array(item_df.loc[item_df['item_id'].astype(str) == item['item_id'], 'features'].item())
     
-    spark_df = spark.read.json(filename)
-    return spark_df
+    # Least squares solution to get user features
+    new_user_matrix = np.linalg.lstsq(all_items_array, all_ratings_array, rcond=None)
 
-def run_model_on(spark_df):
-    """Run Alternating Least Squares Model on Spark Dataframe
-    Args:
-        spark_df: input Spark Dataframe
-    Returns:
-        als_model.fit: """
-    als = ALS(rank=5, regParam=0.01, maxIter=20,
-    userCol='user_id', itemCol='item_id', 
-    ratingCol='overall', nonnegative=True)
+    # New users matrix!
+    new_user_matrix = new_user_matrix[0].reshape((50,))
     
-    model = als.fit(spark_df)
-    return model
+    return new_user_matrix
 
-def get_comic_recommendations(spark_df, model, new_user=101):
-    """Take in model and dataframe and return the recommendations that are comic books/graphic novels
-    Args:
-        spark_df: Spark Dataframe with item_id, user_id, rating, and titles
-    Returns:
-        comic_titles: list of comic book titles and item_id
-    """
-    user_recommend = model.recommendForAllUsers(30)
-    recs_for_user = user_recommend.where(user_recommend.user_id == new_user).take(1)
-    
-    all_comics = [reco[0] for reco in recs_for_user[0]['recommendations']\
-                  if str(reco[0]).endswith('22') ]
-    comic_titles = list(set(spark_df.filter(F.col('item_id')\
-                                       .isin(all_comics))\
-                                       .select(['item_id', 'title']).collect()))
 
-    return comic_titles
-
-def get_user_reviews_testing(new_user=101):
+def get_user_reviews_testing():
     """Take user input and create dataframe added for recommending, built for testing in Jupyter Notebook
     Args:
         None
     Returns:
         pd.DataFrame(reviews): Pandas dataframe of users reviews from inputs
     """
-    
-    all_reviews = create_spark_review_df()
-
-    # Instantiate Spark & load reviews
-    spark = (pyspark.sql.SparkSession.builder
-    .master("local")
-    .getOrCreate())
-
-    # Make a dataframe of just movies
-    query = """
-        SELECT 
-            DISTINCT CAST(item_id as string) as item_id
-        ,   title
-        ,   count
-        FROM 
-            table
-        WHERE 
-            item_id LIKE '%44'"""
-
-    all_reviews.createOrReplaceTempView('table')
-
-    get_movies = spark.sql(query).toPandas()
-
-    # Sort dataframe by review count, take a random sample from the top 500 reviewed
-    get_movies.sort_values('count', ascending=False, inplace=True)
-    movie_rand_sample = get_movies[:500].sample(n=100)
+    # Load data and get random sample of movies with more than 100 reviews
+    item_factors_df = pd.read_json('data/als_item_factor_details.json')
+    movie_rand_sample = item_factors_df[(item_factors_df['item_id'].astype(str).str.endswith('44')) &\
+                                        (item_factors_df['count'] > 50)].sample(n=25)
 
     reviews = []
 
@@ -98,9 +53,8 @@ def get_user_reviews_testing(new_user=101):
             continue
         # Creating dictionary of review and adding to reviews
         else:
-            movie_rating = {'user_id': 101, 'overall': int(rating),
-                            'item_id': int(movie['item_id']), 'title': movie['title']
-                            }
+            movie_rating = {'rating': int(rating),
+                            'item_id': movie['item_id'] }
             reviews.append(movie_rating)
             clear_output()
             if len(reviews) >=10:
@@ -108,32 +62,20 @@ def get_user_reviews_testing(new_user=101):
             else:
                 continue
 
-def get_recommendations_testing(new_user_df, new_user=101):
+def get_recommendations(item_factors_df, new_user_df):
     """Get recommendations for new user, built for testing in Jupyter Notebook
     Args:
-        new_user: id given for new user, defaults to standard 101
         new_user_df: Pandas dataframe with user reviews, as generated from get_user_reviews function
     Returns:
         Prints top three recommended comics for new user
     """
-    spark = (pyspark.sql.SparkSession.builder
-    .master("local")
-    .getOrCreate())
+    user_matrix = get_new_user_matrix(item_factors_df, new_user_df)
 
-    # Combine user reviews with others and prep for modeling
-    new_user_spark = spark.createDataFrame(new_user_df)
+    item_factors_df['new_user_predictions'] = item_factors_df['features'].apply(lambda x: np.dot(x, user_matrix))
 
-    all_reviews = create_spark_review_df().select([F.col("item_id").cast(IntegerType()), F.col("overall"),
-                                                   F.col("title"), F.col("user_id").cast(IntegerType())
-                                                  ])
+    top_ten_comics = item_factors_df.loc[item_factors_df['item_id']\
+                              .astype(str).str.endswith('22'), ['item_id', 'title', 'asin', 'new_user_predictions']]\
+                              .sort_values('new_user_predictions', ascending=False)[:5]
 
-    ratings_all = all_reviews.union(new_user_spark)
-                  
-    # Create ALS model
-    als_model = run_model_on(ratings_all)
-    
-    # Get recommendations for user and only return those that are comics & top three
-    comic_titles = get_comic_recommendations(ratings_all, model=als_model)
+    return top_ten_comics
 
-    for comic in comic_titles:
-        print(comic)

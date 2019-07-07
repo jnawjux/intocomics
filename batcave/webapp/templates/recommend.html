@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1,
+            shrink-to-fit=no">
+
+        <title>IntoComic</title>
+
+        <meta name="description" content="Web App to discover your next comic
+            book
+            find">
+        <meta name="author" content="John Naujoks">
+
+        <!-- Styling and custom CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/simple-sidebar.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css?family=Bangers|Oswald&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!--Brython loading for model activation and JQuery for page functionality-->
+        <script type="text/javascript" src="js/brython.js"></script>
+        <script type="text/javascript" src="js/brython_stdlib.js"></script>
+        <script src="js/jquery.min.js"></script>
+    </head>
+
+    <body style="background-color: #0351cb;" onload="brython(1)">
+        <form action="/results" method="POST">
+            <div class="d-flex" class="wrapper">
+
+                <!-- Sidebar -->
+                <div class="bg-light border-right" id="sidebar-wrapper">
+                    <div class="container">
+                        <div class="text-center intro">
+                            <h1>IntoComics<br> 🎥 ➡ 💬</h1>
+                        </div>
+                        <div class="row intro">
+                            <p class="text-xl-left">
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <a href="{{ url_for('index') }}"><h2>Try again!</h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /#sidebar-wrapper -->
+
+                <!-- Page Content -->
+                <div id="page-content-wrapper">
+                    <div class="container" id="content">
+                        <nav class="navbar navbar-expand-lg navbar-light
+                            bg-light
+                            border-bottom">
+                            <!--<button class="btn" id="menu-toggle">Toggle Menu</button>-->
+                            <button class="navbar-toggler" type="button"
+                                data-toggle="collapse"
+                                data-target="#navbarSupportedContent"
+                                aria-controls="navbarSupportedContent"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse"
+                                id="navbarSupportedContent">
+                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">GitHub</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                        <div class="row">
+                                <div class="col-md-12 text-center">
+                                        <p class="padding-bottom-5 white", style="font-size: 4rem; font-family: 'Bangers', cursive; color: white;">Your recommendations:</p>
+                                    <div class="row top-buffer">
+                                        {% for comic in comic_titles %}
+                                        <div class="col comic-buffer">
+                                            <div class="card bg-light">
+                                                <img class="card-img-top
+                                                    poster-img" alt="{{ comic[0]
+                                                    }}"
+                                                    src="{{ comic[1] }}">
+                                                <div class="card-block">
+                                                    <a href="{{ comic[2] }}">
+                                                        <p class="card-title
+                                                            text-center">
+                                                            <b> {{ comic[0] }}
+                                                            </b>
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /#page-content-wrapper -->
+                </div>
+                <!-- /#wrapper -->
+
+                <!-- Bootstrap core JavaScript -->
+                <script src="js/bootstrap.bundle.min.js"></script>
+            </script>
+    </body>
+
+</html>
