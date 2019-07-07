@@ -11,14 +11,14 @@ def get_new_user_matrix(item_df, user_df, rank=50):
     Returns:
         new_user_matrix: np.array with calculated new users factors. 
     """
-    # User ratings 
+    # User ratings array
     all_ratings_array = np.array((user_df.rating.tolist(),)).T
 
-    # Get item features for these specific movies
+    # Item factors array
     all_items_array = np.zeros(shape=(user_df.shape[0], rank))
 
     for index, item in user_df.iterrows():
-        all_items_array[index, :] = np.array(item_df.loc[item_df['item_id'].astype(str) == item['item_id'], 'features'].item())
+        all_items_array[index, :] = np.array(item_df.loc[item_df['item_id'] == item['item_id'].astype(str),'features'].item())
     
     # Least squares solution to get user features
     new_user_matrix = np.linalg.lstsq(all_items_array, all_ratings_array, rcond=None)
@@ -29,7 +29,7 @@ def get_new_user_matrix(item_df, user_df, rank=50):
     return new_user_matrix
 
 
-def get_user_reviews_testing():
+def get_user_reviews_testing(items_df):
     """Take user input and create dataframe added for recommending, built for testing in Jupyter Notebook
     Args:
         None
@@ -37,9 +37,8 @@ def get_user_reviews_testing():
         pd.DataFrame(reviews): Pandas dataframe of users reviews from inputs
     """
     # Load data and get random sample of movies with more than 100 reviews
-    item_factors_df = pd.read_json('data/als_item_factor_details.json')
-    movie_rand_sample = item_factors_df[(item_factors_df['item_id'].astype(str).str.endswith('44')) &\
-                                        (item_factors_df['count'] > 50)].sample(n=25)
+    movie_rand_sample = items_df[(items_df['item_id'].astype(str).str.endswith('44')) &\
+                                        (items_df['count'] > 50)].sample(n=25)
 
     reviews = []
 
@@ -73,9 +72,9 @@ def get_recommendations(item_factors_df, new_user_df):
 
     item_factors_df['new_user_predictions'] = item_factors_df['features'].apply(lambda x: np.dot(x, user_matrix))
 
-    top_ten_comics = item_factors_df.loc[item_factors_df['item_id']\
+    top_five_comics = item_factors_df.loc[item_factors_df['item_id']\
                               .astype(str).str.endswith('22'), ['item_id', 'title', 'asin', 'new_user_predictions']]\
                               .sort_values('new_user_predictions', ascending=False)[:5]
 
-    return top_ten_comics
+    return top_five_comics
 
