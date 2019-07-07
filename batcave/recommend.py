@@ -18,7 +18,7 @@ def get_new_user_matrix(item_df, user_df, rank=50):
     all_items_array = np.zeros(shape=(user_df.shape[0], rank))
 
     for index, item in user_df.iterrows():
-        all_items_array[index, :] = np.array(item_df.loc[item_df['item_id'] == item['item_id'].astype(str),'features'].item())
+        all_items_array[index, :] = np.array(item_df.loc[item_df['item_id'] == item['item_id'],'features'].item())
     
     # Least squares solution to get user features
     new_user_matrix = np.linalg.lstsq(all_items_array, all_ratings_array, rcond=None)

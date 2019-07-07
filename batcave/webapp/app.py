@@ -19,7 +19,7 @@ def process_form():
     # Create dataframe of user reviews
     reviews = []
     for k, v in request.form.items():
-        rating = {'rating': int(v), 'item_id': str(k)}
+        rating = {'rating': int(v), 'item_id': int(k)}
         reviews.append(rating)
     user_df = pd.DataFrame(reviews)
 
