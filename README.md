@@ -1,5 +1,4 @@
 # IntoComics
-intocomics.naujoks.co
 #### <em>Your guide to getting into comic books</em>
 ---
 
@@ -7,6 +6,7 @@ intocomics.naujoks.co
 * [Data preparation and modeling](https://github.com/jnawjux/intocomics/blob/master/data_prep_and_modeling.ipynb)
 * [Web app development](https://github.com/jnawjux/intocomics/blob/master/web_app_development.ipynb) 
 * [Presentation (Google Slides)](https://docs.google.com/presentation/d/17ZCj6XF-yz0qAAhKozr-Nzvy8R7UQNkzM-Hzz_ehBs0/edit?usp=sharing)
+* [Live Web App](http://www.intocomics.naujoks.co)
 
 ### Business Understanding
 A passion of mine is comic books. As much as I love the medium, the industry at large is often looked over in favor of the next big movie or tv show using their stories or characters. Further, there are a number of great stories and worlds done by smaller artists/writers that are waiting for a chance to shine. My goal is to create a recommendation system where people will be able to match their movie and television preferences to comic books, helping open up a new world of entertainment for them. 
