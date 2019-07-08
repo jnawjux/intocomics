@@ -47,8 +47,8 @@ def get_user_reviews_testing(items_df):
     """
     # Load data and get random sample of movies with more than 100 reviews
     movie_rand_sample = items_df[
-        (items_df["item_id"].astype(str).str.endswith("44"))
-        & (items_df["count"] > 50)
+        (items_df["item_id"].astype(str).str.endswith("44")) &
+        (items_df["count"] > 50)
     ].sample(n=25)
     reviews = []
     # Give a user input and movie title and take in score
@@ -83,8 +83,8 @@ def get_recommendations(item_factors_df, new_user_df):
     """
     user_matrix = get_new_user_matrix(item_factors_df, new_user_df)
 
-    item_factors_df["new_user_predictions"] =
-    item_factors_df["features"].apply(
+    item_factors_df["new_user_predictions"] = item_factors_df["features"]\
+        .apply(
             lambda x: np.dot(x, user_matrix)
             )
 
