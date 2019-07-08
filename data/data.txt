@@ -1,5 +1,0 @@
-Data files used can be found here: http://jmcauley.ucsd.edu/data/amazon/links.html
-The relavent data used from the "Per Category Reviews" section:
-reviews_Books.json
-metadata.json
-reviews_Movies_and_TV.json
