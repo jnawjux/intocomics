@@ -6,3 +6,5 @@ The relavent files used from the "Per Category files" section:
 * reviews_Movies_and_TV.json
 * meta_Movies_and_TV.json
 Be aware that they are very large! (~25GB in total). The files saved at different checkpoints in my walkthrough are much smaller and easier to work wtih, so I recommend using those when starting at sections past my original EDA. 
+
+If you wish to download these files, you can alternatively use the helper function I created as well (```download_amazon_review_files()```) which will download each file one at a time.
