@@ -160,22 +160,22 @@ def row_to_html_card(row):
                 </h4>
                 <div class="container">
                     <div class="row">
-                        <div class="mx-auto">
-                            <input type="radio" id="star1" name="{item_id}"
-                            value=1 />
-                            <label for="star1" title="HATE">1</label>
-                            <input type="radio" id="star2" name="{item_id}"
-                            value=2 />
-                            <label for="star2" title="Meh">2</label>
-                            <input type="radio" id="star3" name="{item_id}"
-                            value=3 />
-                            <label for="star3" title="Just okay">3</label>
-                            <input type="radio" id="star4" name="{item_id}"
-                            value=4 />
-                            <label for="star4" title="Good">4</label>
-                            <input type="radio" id="star5" name="{item_id}"
+                        <div class="mx-auto rating">
+                        <input type="radio" id="star5" name="{item_id}"
                             value=5 />
-                            <label for="star5" title="Love it!">5</label>
+                            <label for="star5" title="Love it!">*</label>
+                        <input type="radio" id="star4" name="{item_id}"
+                            value=4 />
+                            <label for="star4" title="Good">*</label>
+                        <input type="radio" id="star3" name="{item_id}"
+                            value=3 />
+                            <label for="star3" title="Just okay">*</label>
+                        <input type="radio" id="star2" name="{item_id}"
+                            value=2 />
+                            <label for="star2" title="Meh">*</label>
+                        <input type="radio" id="star1" name="{item_id}"
+                            value=1 />
+                            <label for="star1" title="HATE">*</label>
                         </div>
                     </div>
                 </div>
