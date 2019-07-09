@@ -39,13 +39,16 @@
                     <div class="container">
                         <div class="text-center intro">
                             <h1>IntoComics<br> 🎬➡️🗯</h1>
-                        </div>
-                        <div class="row intro">
-                            <p class="text-xl-left">
-                            </p>
+                            <h3 class="text-xl-center">
+                                    Thanks for checking this out!
+                            </h3>
+                            <br>
+                            <a href="https://www.linkedin.com/in/johnnaujoks"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" height="30"/></a>
+                            <a href="https://www.github.com/jnawjux"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" height="30"/></a>
+                            <br>
                         </div>
                         <div class="text-center">
-                            <a href="{{ url_for('index') }}" style="text-decoration: none ;"><h2>Try again!</h2>
+                                <a href="{{ url_for('index') }}" style="text-decoration: none ;"><h2 class="top-buffer">Try again!</h2>
                             </a>
                         </div>
                     </div>
@@ -84,7 +87,7 @@
                                     <div class="row top-buffer">
                                         {% for comic in comic_titles %}
                                         <div class="col comic-buffer">
-                                            <div class="card bg-light">
+                                            <div class="card bg-light h-100">
                                                 <img class="card-img-top
                                                     poster-img" alt="{{ comic[0]
                                                     }}"
