@@ -5,6 +5,22 @@ import pyspark
 import urllib
 
 
+# If you would like to download the files directly, you can run the function below:
+def download_amazon_review_files():
+    print("Start downloads:\nDownloading reviews_Books.json.gz...")
+    url = 'http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Books.json.gz'
+    urllib.request.urlretrieve(url, 'data/reviews_Books.json.gz')
+    print('reviews_Books.json.gz: complete!\nDownloading meta_Books.json.gz...')
+    url = 'http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/meta_Books.json.gz'
+    urllib.request.urlretrieve(url, 'data/meta_Books.json.gz')
+    print('meta_Books.json.gz: complete!\nDownloading reviews_Movies_and_TV.json.gz...')
+    url = 'http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Movies_and_TV.json.gz'
+    urllib.request.urlretrieve(url, 'data/meta_Books.json.gz')
+    print('reviews_Movies_and_TV.json.gz: complete!\nDownloading meta_Movies_and_TV.json.gz...')
+    url = 'http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/meta_Movies_and_TV.json.gz'
+    urllib.request.urlretrieve(url, 'data/meta_Books.json.gz')
+    print('meta_Movies_and_TV.json.gz: complete!\nDownloading complete 👍')
+
 def get_amazon_list_ids(link):
     """Scraping function using Selenium for getting Amazon product IDs
          (ASIN) from 'Best Seller' pages.
