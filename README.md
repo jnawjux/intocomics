@@ -11,10 +11,6 @@
 ### Business Understanding
 A passion of mine is comic books. As much as I love the medium, the industry at large is often looked over in favor of the next big movie or tv show using their stories or characters. Further, there are a number of great stories and worlds done by smaller artists/writers that are waiting for a chance to shine. My goal is to create a recommendation system where people will be able to match their movie and television preferences to comic books, helping open up a new world of entertainment for them. 
 
-<b>User story:</b> Bruce just watched <em>Avengers: Endgame</em> and was blown away.  He loved the rich story telling, incredible visuals, and unique world it created. He has of course heard that many of these stories come from comic books, but has never picked one up before. Bruce has many other interests as well, and is a little hesitant to read comics, since he doesn't want to just read stories about superheroes. There is no comic book shops in his area, and his next best hope to find something he may like is reading through reviews or website lists to hopefully find something interesting.
-<br/><br/>
-IntoComics makes it possible for Bruce to take his already existing preferences for different movies and television shows and be given a curated list of comics he might want to check out.  Bruce then follows links through the page to purchase and further explore the options offered to him. 
-
 ### Data Understanding
 To build my model, I used a large repository of Amazon reviews previously collected in a research project at the University of California, San Diego (~24GB of book and movies/tv reviews from 1996-2014, [more information here](http://jmcauley.ucsd.edu/data/amazon/links.html)). My goal was to use ratings from users who reviewed both comic books and movies/tv.
 
