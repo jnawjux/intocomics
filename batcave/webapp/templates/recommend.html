@@ -1,121 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
-    <head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1,
-            shrink-to-fit=no">
+    <title>IntoComics 🎬➡️🗯</title>
 
-        <title>IntoComics 🎬➡️🗯</title>
+    <meta name="description" content="Web App to discover your next comic book
+      find">
+    <meta name="author" content="John Naujoks">
 
-        <meta name="description" content="Web App to discover your next comic
-            book
-            find">
-        <meta name="author" content="John Naujoks">
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link
+      href="https://fonts.googleapis.com/css?family=Bangers|Oswald&display=swap"
+      rel="stylesheet">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
-        <!-- Styling and custom CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/simple-sidebar.css" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet">
-        <link
-            href="https://fonts.googleapis.com/css?family=Bangers|Oswald&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!--Brython loading for model activation and JQuery for page functionality-->
-        <script type="text/javascript" src="js/brython.js"></script>
-        <script type="text/javascript" src="js/brython_stdlib.js"></script>
-        <script src="js/jquery.min.js"></script>
-    </head>
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!--Brython loading for model activation and JQuery for page functionality-->
+    <script type="text/javascript" src="js/brython.js"></script>
+    <script type="text/javascript" src="js/brython_stdlib.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/jquery.min.js"></script>
+</head>
 
-    <body style="background-color: #0351cb;" onload="brython(1)">
+<body onload="brython(1)" style="background-color: #009efd;">
+
+    <div class="wrapper">
         <form action="/results" method="POST">
-            <div class="d-flex" class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header text-center">
+                    <h1 class="text-center">IntoComics!</h1>
+                    <h3 class="text-center">
+                            Thanks for checking this out!
+                    </h3>
+                    <br>
+                    <a href="https://www.linkedin.com/in/johnnaujoks"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" height="30"/></a>
+                    <a href="https://www.github.com/jnawjux"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" height="30"/></a>
+                    <br>
+                <div class="text-center">
+                        <a href="{{ url_for('index') }}" style="text-decoration: none ;"><h2 class="top-buffer">Try again!</h2>
+                    </a>
+                </div>
+                </div>
+        </nav>
 
-                <!-- Sidebar -->
-                <div class="bg-light border-right" id="sidebar-wrapper">
-                    <div class="container">
-                        <div class="text-center intro">
-                            <h1>IntoComics<br> 🎬➡️🗯</h1>
-                            <h3 class="text-xl-center">
-                                    Thanks for checking this out!
-                            </h3>
-                            <br>
-                            <a href="https://www.linkedin.com/in/johnnaujoks"><img src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg" height="30"/></a>
-                            <a href="https://www.github.com/jnawjux"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" height="30"/></a>
-                            <br>
-                        </div>
-                        <div class="text-center">
-                                <a href="{{ url_for('index') }}" style="text-decoration: none ;"><h2 class="top-buffer">Try again!</h2>
-                            </a>
-                        </div>
+        <!-- Page Content  -->
+        <div id="content" class="body-result">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">GitHub</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
-                <!-- /#sidebar-wrapper -->
-
-                <!-- Page Content -->
-                <div id="page-content-wrapper">
-                    <div class="container" id="content">
-                        <nav class="navbar navbar-expand-lg navbar-light
-                            bg-light
-                            border-bottom">
-                            <!--<button class="btn" id="menu-toggle">Toggle Menu</button>-->
-                            <button class="navbar-toggler" type="button"
-                                data-toggle="collapse"
-                                data-target="#navbarSupportedContent"
-                                aria-controls="navbarSupportedContent"
-                                aria-expanded="false"
-                                aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-
-                            <div class="collapse navbar-collapse"
-                                id="navbarSupportedContent">
-                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="https://github.com/jnawjux/intocomics">GitHub</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                        <div class="row">
-                                <div class="col-md-12 text-center">
-                                        <p class="padding-bottom-5 white", style="font-size: 4rem; font-family: 'Bangers', cursive; color: white;">Your recommendations:</p>
-                                    <div class="row top-buffer">
-                                        {% for comic in comic_titles %}
-                                        <div class="col comic-buffer">
-                                            <div class="card bg-light h-100">
-                                                <img class="card-img-top
-                                                    poster-img" alt="{{ comic[0]
-                                                    }}"
-                                                    src="{{ comic[1] }}">
-                                                <div class="card-block">
-                                                    <a href="{{ comic[2] }}">
-                                                        <p class="card-title
-                                                            text-center">
-                                                            <b> {{ comic[0] }}
-                                                            </b>
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
+            </nav>
+            <div class="container">
+              <div class="row">
+                <div class="col-md-12 text-center">
+                        <p class="padding-bottom-5 white", style="font-size: 4rem; font-family: 'Bangers', cursive; color: white;">Your recommendations:</p>
+                    <div class="row top-buffer">
+                        {% for comic in comic_titles %}
+                        <div class="col comic-buffer">
+                            <div class="card bg-light h-100">
+                                <img class="card-img-top
+                                    poster-img" alt="{{ comic[0]
+                                    }}"
+                                    src="{{ comic[1] }}">
+                                <div class="card-block">
+                                    <a href="{{ comic[2] }}">
+                                        <p class="card-title
+                                            text-center" style="text-decoration: underline;">
+                                            <b> {{ comic[0] }}
+                                            </b>
+                                        </p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <!-- /#page-content-wrapper -->
                 </div>
-                <!-- /#wrapper -->
+            </div>
+          </div>
+        </div>
+    </form>
+</div>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
-                <!-- Bootstrap core JavaScript -->
-                <script src="js/bootstrap.bundle.min.js"></script>
-            </script>
-    </body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+</body>
 
 </html>
