@@ -107,5 +107,8 @@ venv.bak/
 # Leaving off large data files
 reviews_Books.json
 reviews_Movies_and_TV.json
+reviews_Amazon_Instant_Video.json
 meta_Movies_and_TV.json
 meta_Books.json
+meta_Amazon_Instant_Video.json
+
