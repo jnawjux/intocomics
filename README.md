@@ -21,13 +21,14 @@ In order to extract the correct users and ratings, I had to spend a good amount 
 My approach was to build a Alternative Least Squares (ALS) model to have a collaborative filtering recommender system. I treated both movies/tv and comic books equally as items. Using a matrix for all users and items, I created the model, but filtered based on type when getting top recommendations.  
 
 ### Evaluation
-For evaluation, I optimized the performance of my model based on optimizing for Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE). Tuning the parameters of my model did not prove to offer too much in terms of performance, but I settled on my best model using a rank of 50, regularization parameter at .1, and max number of iterations at 20. My best performing model has an RMSE of 1.18.  In general, I would hope to get that number under 1, but think this is a fairly good performance under my current scope. I am working under a larger assumption that each user's taste preferences (regardless of media) are the same, which in general might seem like a big leap, but with this performance actually seems to speak well to that point. 
+For evaluation, I optimized the performance of my model based for Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE). Tuning the hyper-parameters of my model did not prove to offer too much in terms of performance, but I settled on my best model using a rank of 50, regularization parameter at .1, and max number of iterations at 20. My best performing model has an RMSE of 1.17.  In general, I would hope to get that number under 1, but think this is a fairly good performance under my current scope. I am working under a larger assumption that each user's taste preferences (regardless of media) are the same, which in general might seem like a big leap, but with this performance actually seems to speak well to that point. 
 
 ### Deployment
-I have created and am working to deploy to a website a web application version of this fucntional recommendation system.  The application gives the user a selection of movies to rate from 1 to 5 (currently a curated list of 60 movies that were most frequently rated, but leaving off all that are based on comic books or graphic novels to more cleanly drive the seperation of the two medium). Once they have rated one or more, it returns a listing of the top 5 comic book/ graphic novel recommendations with links to each product on Amazon.
+This application can be seen live at [www.intocomics.club](https://www.intocomics.club)!  The application gives the user a selection of movies to rate from 1 to 5 (currently a curated list of 60 movies that were most frequently rated, but leaving off all that are based on comic books or graphic novels to more cleanly drive the seperation of the two medium). Once they have rated one or more, it returns a listing of the top 5 comic book/ graphic novel recommendations with links to each product on Amazon.
 
 ### Next Steps
 ##### Model improvements:
+* Add reviews from Amazon Prime Video into the model as well - ✅
 * Explore adjustments to data to account for user and item bias.
 * Gather more recent review data to improve and deepend my models ability.
 
