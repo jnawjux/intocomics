@@ -2,6 +2,7 @@ from selenium.webdriver import Chrome
 import time
 import pandas as pd
 import pyspark
+import databricks.koalas as ks
 import urllib
 
 
@@ -79,11 +80,7 @@ def new_id_dictionary(df, column, suffix_val):
     Returns:
         new_id_dict: New Spark dataframe with column of new unique ids
     """
-    unique_vals = list(
-                    set(
-                        [old_id[0] for old_id in df.select(column).collect()]
-                        )
-                    )
+    unique_vals = list(set(df[column].tolist()))
     new_ids = [(str(i) + suffix_val) for i in range(1, len(unique_vals) + 1)]
     new_id_dict = {k: v for k, v in zip(unique_vals, new_ids)}
     return new_id_dict
