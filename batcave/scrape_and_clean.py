@@ -6,8 +6,11 @@ import databricks.koalas as ks
 import urllib
 
 
-# If you would like to download the files directly, you can run the function below:
 def download_amazon_review_files():
+    """
+    Helper function to download all the appropriate files locally. They are large (>25G total), so do proceed with 
+    caution and make sure you have appropriate space.
+    """
     print("Start downloads:\nDownloading reviews_Books.json.gz...")
     url = 'http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Books.json.gz'
     urllib.request.urlretrieve(url, 'data/reviews_Books.json.gz')
@@ -23,7 +26,8 @@ def download_amazon_review_files():
     print('meta_Movies_and_TV.json.gz: complete!\nDownloading complete 👍')
 
 def get_amazon_list_ids(link):
-    """Scraping function using Selenium for getting Amazon product IDs
+    """
+    Scraping function using Selenium for getting Amazon product IDs
          (ASIN) from 'Best Seller' pages.
     Args:
       link: html link of 'Best Sellers' page.
@@ -46,7 +50,8 @@ def get_amazon_list_ids(link):
 
 
 def get_related_ids(df):
-    """Function to unpack a list of the unique related product ASINs
+    """
+    Function to unpack a list of the unique related product ASINs
          from the 'Also bought' section.
     Args:
         df: Pandas dataframe (specifically from metadata.json as it works
@@ -69,7 +74,8 @@ def get_related_ids(df):
 
 
 def new_id_dictionary(df, column, suffix_val):
-    """Take in column with unique indexes, return dictionary with new
+    """
+    Take in column with unique indexes, return dictionary with new
      index values. This is done to remove the default ASIN and user ID
      from Amazon reviews and create better unique ids.
     Args:
@@ -87,7 +93,8 @@ def new_id_dictionary(df, column, suffix_val):
 
 
 def get_title_by_asin(asin):
-    """Scraping function using Selenium for getting
+    """
+    Scraping function using Selenium for getting
         product names by Amazon ASIN.
     Args:
       asin: Amazon ASIN unique product ID
@@ -117,13 +124,15 @@ def get_title_by_asin(asin):
 
 
 def get_missing_titles(asin_list):
-    """Take in a list of ASINs and return a list of dictionaries
+    """
+    Take in a list of ASINs and return a list of dictionaries
         with their correct title
         Args:
       asin_list: list of ASINs to search for on Amazon
     Returns:
       asin_title_list: a new list of dictionaries
-        with the asin and title for each"""
+        with the asin and title for each
+    """
     asin_title_list = []
 
     for asin in asin_list:
@@ -135,7 +144,8 @@ def get_missing_titles(asin_list):
 
 
 def get_item_image(df, directory):
-    """Get images from dataframe. This is meant specifically
+    """
+    Get images from dataframe. This is meant specifically
          to work with metadata dataframe
     Args:
         df: subset dataframe to extract from
@@ -153,12 +163,14 @@ def get_item_image(df, directory):
 
 
 def row_to_html_card(row):
-    """Takes a row from a dataframe and returns
+    """
+    Takes a row from a dataframe and returns
         the card html needed for the web app
     Args:
     row: individual row from Pandas dataframe with title, asin, and item_id
     Returns:
-    card_html: html text for an html card"""
+    card_html: html text for an html card
+    """
     title = row["title"]
     filename = "images/movies/" + str(row["asin"]) + ".jpg"
     item_id = str(row["item_id"])
