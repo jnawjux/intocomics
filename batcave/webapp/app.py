@@ -5,7 +5,7 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__, static_url_path="")
 
-item_factors_df = pd.read_json('../../data/als_item_factor_details.json', lines=True)
+item_factors_df = pd.read_json('../../data/als_item_factor_details.json')
 
 @app.route('/')
 def index():
